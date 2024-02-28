@@ -15,7 +15,7 @@ import XCTest
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
             XCTAssert(exifData["File Path"]==testFilePath)
             XCTAssert(exifData["File Type"]=="JPEG")
-            XCTAssert(exifData.count == 258)
+            XCTAssert(exifData.count == 280)
         }
         func testBadImage() {
             var testFilePath: String
@@ -49,7 +49,7 @@ import XCTest
             if let filepath = Bundle.module.pathForImageResource("DSC04247.jpg") {
                 testFilePath = filepath
             } else {
-                testFilePath = "/Users/hlemai/Dev/next/common/ExifTool/Tests/ExifToolTests/Resources/DSC04247.jpg"
+                testFilePath = "/Users/clement/Development//ExifTool/Tests/ExifToolTests/Resources/DSC04247.jpg"
             }
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
@@ -78,10 +78,11 @@ import XCTest
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(
                 fromurl: url,
-                tags: ["SequenceLength", "FocusLocation"]).getMetadata(lang: "en")
+                tags: ["SequenceLength", "FocusLocation", "DateTimeOriginal"]).getMetadata(lang: "en")
             XCTAssert(exifData["ISO"] == nil)
+            XCTAssert(exifData["Date/Time Original"] ?? "" == "2020:11:22 12:27:24")
             XCTAssert( (exifData["Sequence Length"] ?? "").starts(with: "1 "))
-            XCTAssert(exifData.count == 3)
+            XCTAssert(exifData.count == 4)
         }
 
         func testUpdate() {
