@@ -13,9 +13,9 @@ import XCTest
 
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
-            XCTAssert(exifData["File Path"]==testFilePath)
-            XCTAssert(exifData["File Type"]=="JPEG")
-            XCTAssert(exifData.count == 280)
+            XCTAssertEqual(exifData["File Path"], testFilePath)
+            XCTAssertEqual(exifData["File Type"], "JPEG")
+            XCTAssertEqual(exifData.count, 280)
         }
         func testBadImage() {
             var testFilePath: String
@@ -26,8 +26,8 @@ import XCTest
             }
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
-            XCTAssert(exifData["File Path"]==testFilePath)
-            XCTAssert(exifData["File Type"]=="TXT")
+            XCTAssertEqual(exifData["File Path"], testFilePath)
+            XCTAssertEqual(exifData["File Type"], "TXT")
         }
         func testNoImage() {
             var testFilePath: String
@@ -38,8 +38,8 @@ import XCTest
             }
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
-            XCTAssert(exifData["File Path"]==testFilePath)
-            XCTAssert(exifData["File Type"]==nil)
+            XCTAssertEqual(exifData["File Path"], testFilePath)
+            XCTAssertNil(exifData["File Type"])
         }
 
         func testWithnoExifTool() {
@@ -54,8 +54,8 @@ import XCTest
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
             ExifTool.setExifTool(backup)
-            XCTAssert(exifData["File Path"]==testFilePath)
-            XCTAssert(exifData["File Type"]==nil)
+            XCTAssertEqual(exifData["File Path"], testFilePath)
+            XCTAssertNil(exifData["File Type"])
         }
         func testDirectory() {
             var testFilePath: String
@@ -64,8 +64,8 @@ import XCTest
 
             let url = URL(fileURLWithPath: testFilePath)
             let exifData = ExifTool.read(fromurl: url).getMetadata(lang: "en")
-            XCTAssert(exifData["File Path"]==testFilePath)
-            XCTAssert(exifData["File Type"]==nil)
+            XCTAssertEqual(exifData["File Path"], testFilePath)
+            XCTAssertNil(exifData["File Type"])
         }
         func testRawAndfilteredMeta() {
             var testFilePath: String
@@ -79,10 +79,12 @@ import XCTest
             let exifData = ExifTool.read(
                 fromurl: url,
                 tags: ["SequenceLength", "FocusLocation", "DateTimeOriginal"]).getMetadata(lang: "en")
-            XCTAssert(exifData["ISO"] == nil)
-            XCTAssert(exifData["Date/Time Original"] ?? "" == "2020:11:22 12:27:24")
-            XCTAssert( (exifData["Sequence Length"] ?? "").starts(with: "1 "))
-            XCTAssert(exifData.count == 4)
+            XCTAssertNil(exifData["ISO"])
+            XCTAssertNotNil(exifData["Date/Time Original"])
+            XCTAssertEqual(exifData["Date/Time Original"]!, "2020:11:22 12:27:24")
+            XCTAssertNotNil(exifData["Sequence Length"])
+            XCTAssert(exifData["Sequence Length"]!.starts(with: "1 "))
+            XCTAssertEqual(exifData.count, 4)
         }
 
         func testUpdate() {
@@ -97,7 +99,7 @@ import XCTest
             exiftool.update(metadata: ["ImageDescription": "Description by HLE"])
 
             let exifData = ExifTool.read(fromurl: url, tags: ["ImageDescription"])
-            XCTAssert(exifData["ImageDescription"] == "Description by HLE")
+            XCTAssertEqual(exifData["ImageDescription"], "Description by HLE")
 
         }
     }
