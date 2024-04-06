@@ -59,6 +59,7 @@ public class ExifTool: Sequence {
                 if task.isRunning {
                     task.terminate()
                     let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                    try! errorPipe.fileHandleForReading.close()
                     logger.info("Detailled of stderror : \(String(decoding: errorData, as: UTF8.self))")
                 } else {
                     logger.warning("cannot run \(ExifTool.exifToolPath)")
@@ -67,7 +68,9 @@ public class ExifTool: Sequence {
             }
 
             let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            try! outputPipe.fileHandleForReading.close()
             let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+            try! errorPipe.fileHandleForReading.close()
             if !errorData.isEmpty {
                 logger.error("Detailled of stderror : \(String(decoding: errorData, as: UTF8.self))")
             }
@@ -132,6 +135,7 @@ public class ExifTool: Sequence {
             if task.isRunning {
                 task.terminate()
                 let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                try! errorPipe.fileHandleForReading.close()
                 ExifTool.logger.info("Detailled of stderror : \(String(decoding: errorData, as: UTF8.self))")
             } else {
                 ExifTool.logger.warning("cannot run \(ExifTool.exifToolPath)")
@@ -140,9 +144,11 @@ public class ExifTool: Sequence {
         }
 
         let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        try! outputPipe.fileHandleForReading.close()
         ExifTool.logger.debug("response: \(String(decoding: outputData, as: UTF8.self))")
 
         let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+        try! errorPipe.fileHandleForReading.close()
         if !errorData.isEmpty {
             ExifTool.logger.error("Detailled of stderror : \(String(decoding: errorData, as: UTF8.self))")
         }
@@ -177,6 +183,7 @@ public class ExifTool: Sequence {
             if task.isRunning {
                 task.terminate()
                 let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                try! errorPipe.fileHandleForReading.close()
                 ExifTool.logger.info("Detailled of stderror : \(String(decoding: errorData, as: UTF8.self))")
             } else {
                 ExifTool.logger.warning("cannot run \(ExifTool.exifToolPath)")
@@ -185,8 +192,10 @@ public class ExifTool: Sequence {
         }
 
         let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        try! outputPipe.fileHandleForReading.close()
         let output = String(decoding: outputData, as: UTF8.self)
         let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+        try! errorPipe.fileHandleForReading.close()
         if !errorData.isEmpty {
             ExifTool.logger.error("Detailled of stderror : \(String(decoding: errorData, as: UTF8.self))")
         }
